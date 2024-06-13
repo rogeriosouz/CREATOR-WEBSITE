@@ -48,7 +48,7 @@ export function ListProjects() {
   })
 
   return (
-    <div className="grid grid-cols-5 gap-10 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+    <div className="grid grid-cols-5 gap-7 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
       {status === 'pending' && (
         <>
           <LoadingCardProject />
