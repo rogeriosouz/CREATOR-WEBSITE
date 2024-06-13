@@ -6,6 +6,7 @@ import { ReactNode, useEffect } from 'react'
 import { getCookie } from './utils/getCookie'
 import { Applications } from './pages/app/applications'
 import { Application } from './pages/app/applications/id'
+import { Browser } from './pages/app/applications/browser'
 import ErrorPage from './error-page'
 
 function PrivateRoute({ children }: { children: ReactNode }) {
@@ -53,6 +54,14 @@ export const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <Application />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/app/applications/browser/:id',
+    element: (
+      <PrivateRoute>
+        <Browser />
       </PrivateRoute>
     ),
   },

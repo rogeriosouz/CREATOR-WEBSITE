@@ -15,8 +15,10 @@ import { Browser } from './components/browser'
 import { Editor } from './components/editor'
 import { ConfigEditor } from './components/config-editor'
 import { Code } from './components/code'
+import { OpenNewBrowser } from './components/open-new-browser'
+import { Browsers } from '@phosphor-icons/react'
 
-type Project = {
+export type Project = {
   id: string
   name: string
   html: string
@@ -24,12 +26,12 @@ type Project = {
   javascript: string
 }
 
-interface ApplicationResponse {
+export interface ApplicationResponse {
   statusCode: number
   project: Project
 }
 
-interface ApplicationErrorResponse {
+export interface ApplicationErrorResponse {
   statusCode: number
   message: string
 }
@@ -94,9 +96,17 @@ export function Application() {
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={75} minSize={25}>
-            <div className="w-full h-[5vh] flex items-center justify-between p-2 border-b">
-              <div></div>
-              <Code />
+            <div className="w-full h-[5vh] flex items-center justify-between py-2 px-3 border-b">
+              <div className="flex items-center gap-2">
+                <Browsers className="size-5" weight="fill" />
+
+                <h2 className="font-black uppercase">Browser</h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <OpenNewBrowser />
+
+                <Code />
+              </div>
             </div>
             <Browser />
           </ResizablePanel>
