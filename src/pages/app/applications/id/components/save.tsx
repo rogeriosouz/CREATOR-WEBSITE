@@ -4,6 +4,14 @@ import { useApplicationStore } from '../store/useApplicationStore'
 import { CircleNotch, Play } from '@phosphor-icons/react'
 import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useEventListener } from 'usehooks-ts'
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export function Save() {
   const { id } = useParams()
@@ -31,7 +39,6 @@ export function Save() {
       return data
     },
     onSuccess: (_, { html, css, javascript }) => {
-      console.log(javascript)
       setNewOutputValue({ html, css, javascript })
     },
   })
@@ -65,18 +72,35 @@ export function Save() {
       outputLanguagesValue.javascript === javascript) ||
     status === 'pending'
 
+  useEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key === 's') {
+      event.preventDefault()
+
+      save()
+    }
+  })
+
   return (
-    <Button
-      onClick={save}
-      disabled={isDisabled}
-      variant={'outline'}
-      size={'sm'}
-    >
-      {status === 'pending' ? (
-        <CircleNotch className="size-5 animate-spin" />
-      ) : (
-        <Play className="size-5" weight="fill" />
-      )}
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            onClick={save}
+            disabled={isDisabled}
+            variant={'outline'}
+            size={'sm'}
+          >
+            {status === 'pending' ? (
+              <CircleNotch className="size-5 animate-spin" />
+            ) : (
+              <Play className="size-5" weight="fill" />
+            )}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Clique para salvar e executar. ou (ctrl + s)</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }

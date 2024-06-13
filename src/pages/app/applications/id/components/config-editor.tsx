@@ -15,6 +15,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useApplicationStore } from '../store/useApplicationStore'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 const fonts = [
   {
@@ -55,38 +61,47 @@ export function ConfigEditor() {
     store.setFontSizeEditor,
   ])
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant={'outline'} size={'sm'}>
-          <Gear className="size-5" weight="fill" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Configuração do editor</DialogTitle>
-        </DialogHeader>
+    <TooltipProvider>
+      <Tooltip>
+        <Dialog>
+          <DialogTrigger asChild>
+            <TooltipTrigger asChild>
+              <Button variant={'outline'} size={'sm'}>
+                <Gear className="size-5" weight="fill" />
+              </Button>
+            </TooltipTrigger>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Configuração do editor</DialogTitle>
+            </DialogHeader>
 
-        <div className="w-full flex items-center justify-between mt-2">
-          <p className="font-medium text-base">font-size:</p>
+            <div className="w-full flex items-center justify-between mt-2">
+              <p className="font-medium text-base">font-size:</p>
 
-          <Select
-            value={String(fontSizeEditor)}
-            defaultValue={String(fonts[0].font)}
-            onValueChange={(value) => setFontSizeEditor(Number(value))}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="font" />
-            </SelectTrigger>
-            <SelectContent>
-              {fonts.map((font) => (
-                <SelectItem key={font.id} value={String(font.font)}>
-                  {font.font}px
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </DialogContent>
-    </Dialog>
+              <Select
+                value={String(fontSizeEditor)}
+                defaultValue={String(fonts[0].font)}
+                onValueChange={(value) => setFontSizeEditor(Number(value))}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="font" />
+                </SelectTrigger>
+                <SelectContent>
+                  {fonts.map((font) => (
+                    <SelectItem key={font.id} value={String(font.font)}>
+                      {font.font}px
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <TooltipContent>
+          <p>Configuração do editor</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }

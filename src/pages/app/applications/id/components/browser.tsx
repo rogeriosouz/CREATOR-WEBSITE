@@ -7,6 +7,7 @@ export function Browser() {
       title="output"
       srcDoc={outputValue}
       style={{ width: '100%', height: '100%' }}
+      sandbox="allow-scripts"
     />
   )
 }
