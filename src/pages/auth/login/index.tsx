@@ -3,10 +3,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import {
+  ArrowLeft,
   Check,
   CircleNotch,
   MoonStars,
   Sun,
+  UserCircle,
   WarningCircle,
 } from '@phosphor-icons/react'
 import { z } from 'zod'
@@ -74,7 +76,12 @@ export function Login() {
       )}
 
       <div className="fixed py-2 top-0 w-full flex items-center justify-between px-5">
-        <div></div>
+        <Button asChild variant={'outline'} size={'icon'}>
+          <Link to={'/'}>
+            <ArrowLeft className="size-5" weight="bold" />
+          </Link>
+        </Button>
+
         <Button onClick={setNewTheme} variant={'ghost'} size={'icon'}>
           {theme === 'light' ? (
             <MoonStars className="size-6" weight="fill" />
@@ -86,11 +93,15 @@ export function Login() {
 
       <form
         onSubmit={handleSubmit(login)}
-        className="w-[450px] bg-white rounded-md md:px-7 p-10 shadow-2xl md:w-full"
+        className="w-[450px] bg-white rounded-md md:px-7 p-10 box-shadow-card md:w-full"
       >
-        <h1 className="text-lg dark:text-black font-medium text-center mb-5">
-          Faça o login abaixo
-        </h1>
+        <div className="w-full flex flex-col items-center justify-center">
+          <UserCircle className="size-10" weight="fill" />
+
+          <h1 className="text-lg dark:text-black font-medium text-center mb-5">
+            Faça o login abaixo
+          </h1>
+        </div>
 
         <label className="block space-y-1 mb-2">
           <p className="font-normal dark:text-black">e-mail</p>

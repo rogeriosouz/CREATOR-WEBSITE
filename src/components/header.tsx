@@ -5,8 +5,9 @@ import { Link, useResolvedPath } from 'react-router-dom'
 import { Browsers, MoonStars, Sun, User } from '@phosphor-icons/react'
 import clsx from 'clsx'
 import { useTheme } from './theme-provider'
+import { MenuMobile } from './menu-mobile'
 
-const links = [
+export const links = [
   {
     id: 1,
     title: 'home',
@@ -37,13 +38,15 @@ export function Header() {
   return (
     <header className="w-full border-b py-2 flex items-center justify-between px-32 md:px-10">
       <div className="flex items-center w-full gap-10">
-        <Link to={'/'} className="flex items-center gap-2">
+        <MenuMobile />
+
+        <Link to={'/'} className="flex md:hidden items-center gap-2">
           <Browsers className="size-10" weight="fill" />
           <h1 className="font-black text-lg">CREATOR WEB</h1>
         </Link>
 
         {isAuthenticate && (
-          <nav className="w-full flex items-center flex-1">
+          <nav className="w-full flex md:hidden items-center flex-1">
             <ul className="flex items-center gap-2">
               {links.map((link) => (
                 <li className="text-base font-medium" key={link.id}>
@@ -71,7 +74,7 @@ export function Header() {
             <Avatar />
           </div>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 md:hidden">
             <Button asChild variant={'outline'} className="gap-2">
               <Link to={'/auth/login'}>
                 <User className="size-5" weight="bold" />

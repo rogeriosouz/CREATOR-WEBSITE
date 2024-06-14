@@ -3,10 +3,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import {
+  ArrowLeft,
   Check,
   CircleNotch,
   MoonStars,
   Sun,
+  UserCircle,
   WarningCircle,
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
@@ -93,7 +95,12 @@ export function Register() {
       )}
 
       <div className="fixed py-2 top-0 w-full flex items-center justify-between px-5">
-        <div></div>
+        <Button asChild variant={'outline'} size={'icon'}>
+          <Link to={'/'}>
+            <ArrowLeft className="size-5" weight="bold" />
+          </Link>
+        </Button>
+
         <Button onClick={setNewTheme} variant={'ghost'} size={'icon'}>
           {theme === 'light' ? (
             <MoonStars className="size-6" weight="fill" />
@@ -105,11 +112,15 @@ export function Register() {
 
       <form
         onSubmit={handleSubmit(registerSubmit)}
-        className="w-[450px] md:px-7 md:w-full bg-white rounded-md p-10 shadow-2xl"
+        className="w-[450px] md:px-7 md:w-full bg-white rounded-md p-10 box-shadow-card"
       >
-        <h1 className="text-lg dark:text-black font-medium text-center mb-5">
-          Faça o registro abaixo
-        </h1>
+        <div className="w-full flex flex-col items-center justify-center">
+          <UserCircle className="size-10" weight="fill" />
+
+          <h1 className="text-lg dark:text-black font-medium text-center mb-5">
+            Faça o registro abaixo
+          </h1>
+        </div>
 
         <label className="block space-y-1 mb-2">
           <p className="font-normal dark:text-black ">nome</p>
