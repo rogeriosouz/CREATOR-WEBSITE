@@ -2,12 +2,19 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
-import { Check, CircleNotch, WarningCircle } from '@phosphor-icons/react'
+import {
+  Check,
+  CircleNotch,
+  MoonStars,
+  Sun,
+  WarningCircle,
+} from '@phosphor-icons/react'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Helmet } from 'react-helmet-async'
+import { useTheme } from '@/components/theme-provider'
 
 const schemaLogin = z.object({
   email: z.string().email(),
@@ -17,6 +24,7 @@ const schemaLogin = z.object({
 type SchemaLogin = z.infer<typeof schemaLogin>
 
 export function Login() {
+  const { setTheme, theme } = useTheme()
   const {
     register,
     handleSubmit,
@@ -32,27 +40,25 @@ export function Login() {
     store.data,
   ])
 
-  // const loginMutation = useMutation<
-  //   { message: string; statusCode: string },
-  //   { response: { data: { statusCode: number; message: string } } },
-  //   { email: string; password: string }
-  // >({
-  //   mutationFn: async ({ email, password }) => {
-  //     const { data } = await api.post('/auth/login', { email, password })
-
-  //     return data
-  //   },
-  // })
-
   function login(data: SchemaLogin) {
     loginFn({ email: data.email, password: data.password })
   }
 
+  function setNewTheme() {
+    if (theme === 'dark') {
+      setTheme('light')
+      return
+    }
+
+    setTheme('dark')
+  }
+
   return (
-    <div className="w-screen min-h-screen flex-col flex items-center justify-center">
+    <div className="w-screen md:px-5 min-h-screen flex-col flex items-center justify-center">
       <Helmet>
         <title>login</title>
       </Helmet>
+
       {status === 'error' && (
         <Alert variant={'destructive'} className="mb-5">
           <WarningCircle className="h-4 w-4" />
@@ -67,16 +73,27 @@ export function Login() {
         </Alert>
       )}
 
+      <div className="fixed py-2 top-0 w-full flex items-center justify-between px-5">
+        <div></div>
+        <Button onClick={setNewTheme} variant={'ghost'} size={'icon'}>
+          {theme === 'light' ? (
+            <MoonStars className="size-6" weight="fill" />
+          ) : (
+            <Sun className="size-6" weight="fill" />
+          )}
+        </Button>
+      </div>
+
       <form
         onSubmit={handleSubmit(login)}
-        className="w-[450px] bg-white rounded-md p-10 shadow-2xl"
+        className="w-[450px] bg-white rounded-md md:px-7 p-10 shadow-2xl md:w-full"
       >
-        <h1 className="text-lg font-medium text-center mb-5">
+        <h1 className="text-lg dark:text-black font-medium text-center mb-5">
           Faça o login abaixo
         </h1>
 
         <label className="block space-y-1 mb-2">
-          <p className="font-normal">e-mail</p>
+          <p className="font-normal dark:text-black">e-mail</p>
           <Input
             type="text"
             {...register('email')}
@@ -87,7 +104,7 @@ export function Login() {
         </label>
 
         <label className="block space-y-1 mb-5">
-          <p>password</p>
+          <p className="font-normal dark:text-black">password</p>
           <Input
             type="password"
             {...register('password')}
@@ -98,7 +115,7 @@ export function Login() {
 
           <div className="w-full text-right">
             <Link
-              className="text-sm font-normal hover:underline hover:opacity-90 transition-all"
+              className="text-sm dark:text-black font-normal hover:underline hover:opacity-90 transition-all"
               to={'/auth/recovery-password'}
             >
               Esqueceu sua senha?
@@ -109,7 +126,7 @@ export function Login() {
         <Button
           disabled={status === 'pending'}
           variant="default"
-          className="w-full mb-5"
+          className="w-full mb-5 dark:bg-secondary dark:text-white dark:hover:opacity-90 dark:transition-all"
         >
           {status === 'pending' ? (
             <CircleNotch className="animate-spin size-5" />
@@ -118,7 +135,7 @@ export function Login() {
           )}
         </Button>
 
-        <p className="text-sm text-center font-normal">
+        <p className="text-sm text-center dark:text-black font-normal">
           se não possui uma conta clique aqui{' '}
           <Link
             to={'/auth/register'}

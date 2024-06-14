@@ -12,10 +12,13 @@ export function CardProject({
   project: { id, name, updatedAt },
 }: CardProjectProps) {
   return (
-    <div className="w-full relative hover:border-primary hover:bg-secondary transition-all py-10 flex flex-col items-center justify-center border rounded">
+    <div className="w-full relative   flex flex-col items-center justify-center ">
       <UpdateProject nameProject={name} projectId={id} />
 
-      <Link className="text-center mt-2" to={`/app/applications/${id}`}>
+      <Link
+        className="text-center mt-2  w-full py-10 border rounded hover:border-primary hover:bg-secondary transition-all"
+        to={`/app/applications/${id}`}
+      >
         <h2 className="font-normal mb-1">{name}</h2>
         <p className="text-center ">
           última atualização: {formatDate(updatedAt)}

@@ -22,11 +22,11 @@ export function Languages() {
   ])
 
   return (
-    <div className="w-full flex">
+    <div className="w-full flex h-full">
       <button
         onClick={() => setLanguageSelect('html')}
         className={clsx(
-          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full py-2 px-5 border-r',
+          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r',
           {
             'bg-secondary border-b-primary': languageSelect === 'html',
           },
@@ -42,7 +42,7 @@ export function Languages() {
       <button
         onClick={() => setLanguageSelect('css')}
         className={clsx(
-          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full py-2 px-5 border-r',
+          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r',
           {
             'bg-secondary border-b-primary': languageSelect === 'css',
           },
@@ -58,7 +58,7 @@ export function Languages() {
       <button
         onClick={() => setLanguageSelect('javascript')}
         className={clsx(
-          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full py-2 px-5 border-r',
+          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r',
           {
             'bg-secondary border-b-primary': languageSelect === 'javascript',
           },

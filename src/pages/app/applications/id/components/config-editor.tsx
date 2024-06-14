@@ -14,13 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useApplicationStore } from '../store/useApplicationStore'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { Themes, themes, useEditorStore } from '../store/useEditorStore'
 
 const fonts = [
   {
@@ -56,10 +56,14 @@ const fonts = [
 ]
 
 export function ConfigEditor() {
-  const [fontSizeEditor, setFontSizeEditor] = useApplicationStore((store) => [
-    store.fontSizeEditor,
-    store.setFontSizeEditor,
-  ])
+  const [fontSizeEditor, setFontSizeEditor, theme, setNewTheme] =
+    useEditorStore((store) => [
+      store.fontSizeEditor,
+      store.setFontSizeEditor,
+      store.theme,
+      store.setNewTheme,
+    ])
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -91,6 +95,27 @@ export function ConfigEditor() {
                   {fonts.map((font) => (
                     <SelectItem key={font.id} value={String(font.font)}>
                       {font.font}px
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="w-full flex items-center justify-between mt-2">
+              <p className="font-medium text-base">tema:</p>
+
+              <Select
+                value={theme}
+                defaultValue={String(fonts[0].font)}
+                onValueChange={(value: Themes) => setNewTheme(value)}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="tema" />
+                </SelectTrigger>
+                <SelectContent>
+                  {themes.map((theme) => (
+                    <SelectItem key={theme} value={theme}>
+                      {theme}
                     </SelectItem>
                   ))}
                 </SelectContent>

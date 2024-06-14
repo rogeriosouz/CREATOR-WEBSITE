@@ -17,6 +17,7 @@ import { ConfigEditor } from './components/config-editor'
 import { Code } from './components/code'
 import { OpenNewBrowser } from './components/open-new-browser'
 import { Browsers } from '@phosphor-icons/react'
+import { Helmet } from 'react-helmet-async'
 
 export type Project = {
   id: string
@@ -77,40 +78,52 @@ export function Application() {
     <>
       <Header />
 
+      {status === 'pending' && (
+        <Helmet>
+          <title>Loading...</title>
+        </Helmet>
+      )}
+
       {status === 'success' && (
-        <ResizablePanelGroup direction="horizontal" className="min-h-[93vh]">
-          <ResizablePanel defaultSize={25} minSize={25}>
-            <div className="w-full h-[5vh] flex pr-2 items-center border-b justify-between">
-              <Languages />
+        <>
+          <Helmet>
+            <title>Projeto - {data.project.name}</title>
+          </Helmet>
 
-              <div className="flex items-center gap-2">
-                <Save />
+          <ResizablePanelGroup direction="horizontal" className="min-h-[93vh]">
+            <ResizablePanel defaultSize={25} minSize={25}>
+              <div className="w-full h-[5vh] flex pr-2 items-center justify-between">
+                <Languages />
 
-                <ConfigEditor />
+                <div className="flex items-center gap-2">
+                  <Save />
+
+                  <ConfigEditor />
+                </div>
               </div>
-            </div>
 
-            <div className="w-full h-full">
-              <Editor />
-            </div>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={75} minSize={25}>
-            <div className="w-full h-[5vh] flex items-center justify-between py-2 px-3 border-b">
-              <div className="flex items-center gap-2">
-                <Browsers className="size-5" weight="fill" />
-
-                <h2 className="font-black uppercase">Browser</h2>
+              <div className="w-full h-full">
+                <Editor />
               </div>
-              <div className="flex items-center gap-2">
-                <OpenNewBrowser />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={75} minSize={25}>
+              <div className="w-full h-[5vh] flex items-center justify-between py-2 px-3 border-b">
+                <div className="flex items-center gap-2">
+                  <Browsers className="size-5" weight="fill" />
 
-                <Code />
+                  <h2 className="font-black uppercase">Browser</h2>
+                </div>
+                <div className="flex items-center gap-2">
+                  <OpenNewBrowser />
+
+                  <Code />
+                </div>
               </div>
-            </div>
-            <Browser />
-          </ResizablePanel>
-        </ResizablePanelGroup>
+              <Browser />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </>
       )}
     </>
   )

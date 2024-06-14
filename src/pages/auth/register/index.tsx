@@ -2,13 +2,20 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
-import { Check, CircleNotch, WarningCircle } from '@phosphor-icons/react'
+import {
+  Check,
+  CircleNotch,
+  MoonStars,
+  Sun,
+  WarningCircle,
+} from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { useMutation } from '@tanstack/react-query'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { z } from 'zod'
 import { api } from '@/lib/api'
 import { Helmet } from 'react-helmet-async'
+import { useTheme } from '@/components/theme-provider'
 
 const schemaRegister = z.object({
   name: z.string().min(5),
@@ -19,6 +26,7 @@ const schemaRegister = z.object({
 type SchemaRegister = z.infer<typeof schemaRegister>
 
 export function Register() {
+  const { setTheme, theme } = useTheme()
   const push = useNavigate()
   const {
     register,
@@ -53,10 +61,19 @@ export function Register() {
     registerMutation.mutate(data)
   }
 
+  function setNewTheme() {
+    if (theme === 'dark') {
+      setTheme('light')
+      return
+    }
+
+    setTheme('dark')
+  }
+
   const { status, error, data } = registerMutation
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center justify-center">
+    <div className="w-screen min-h-screen md:px-5 flex flex-col items-center justify-center">
       <Helmet>
         <title>register</title>
       </Helmet>
@@ -75,16 +92,27 @@ export function Register() {
         </Alert>
       )}
 
+      <div className="fixed py-2 top-0 w-full flex items-center justify-between px-5">
+        <div></div>
+        <Button onClick={setNewTheme} variant={'ghost'} size={'icon'}>
+          {theme === 'light' ? (
+            <MoonStars className="size-6" weight="fill" />
+          ) : (
+            <Sun className="size-6" weight="fill" />
+          )}
+        </Button>
+      </div>
+
       <form
         onSubmit={handleSubmit(registerSubmit)}
-        className="w-[450px] bg-white rounded-md p-10 shadow-lg"
+        className="w-[450px] md:px-7 md:w-full bg-white rounded-md p-10 shadow-2xl"
       >
-        <h1 className="text-lg font-medium text-center mb-5">
+        <h1 className="text-lg dark:text-black font-medium text-center mb-5">
           Faça o registro abaixo
         </h1>
 
         <label className="block space-y-1 mb-2">
-          <p className="font-normal">nome</p>
+          <p className="font-normal dark:text-black ">nome</p>
           <Input
             type="text"
             {...register('name')}
@@ -95,7 +123,7 @@ export function Register() {
         </label>
 
         <label className="block space-y-1 mb-2">
-          <p className="font-normal">e-mail</p>
+          <p className="font-normal dark:text-black ">e-mail</p>
           <Input
             type="text"
             {...register('email')}
@@ -106,7 +134,7 @@ export function Register() {
         </label>
 
         <label className="block space-y-1 mb-5">
-          <p>password</p>
+          <p className="font-normal dark:text-black ">password</p>
           <Input
             type="password"
             {...register('password')}
@@ -119,7 +147,7 @@ export function Register() {
         <Button
           disabled={status === 'pending'}
           variant="default"
-          className="w-full mb-5"
+          className="w-full mb-5 dark:bg-secondary dark:text-white dark:hover:opacity-90 dark:transition-all"
         >
           {status === 'pending' ? (
             <CircleNotch className="animate-spin size-5" />
@@ -128,7 +156,7 @@ export function Register() {
           )}
         </Button>
 
-        <p className="text-sm text-center font-normal">
+        <p className="text-sm dark:text-black text-center font-normal">
           se já possui uma conta clique aqui{' '}
           <Link
             to={'/auth/login'}

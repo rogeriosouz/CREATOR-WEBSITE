@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ApplicationErrorResponse, ApplicationResponse } from '../id'
 import { useParams } from 'react-router-dom'
 import { api } from '@/lib/api'
+import { Helmet } from 'react-helmet-async'
 
 export function Browser() {
   const { id } = useParams()
@@ -36,6 +37,18 @@ export function Browser() {
 
   return (
     <section className="w-full h-screen">
+      {status === 'pending' && (
+        <Helmet>
+          <title>Loading..</title>
+        </Helmet>
+      )}
+
+      {status === 'success' && (
+        <Helmet>
+          <title>Browser - {data.project.name}</title>
+        </Helmet>
+      )}
+
       <iframe
         title="output"
         srcDoc={outputValue}

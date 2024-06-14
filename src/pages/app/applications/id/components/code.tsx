@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Check, Code as CodeIcon, Copy } from '@phosphor-icons/react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import EditorMonaco from '@monaco-editor/react'
+import EditorMonaco, { Monaco, OnMount } from '@monaco-editor/react'
 import { useApplicationStore } from '../store/useApplicationStore'
 import { html as beautifyHtml } from 'js-beautify'
 import { useCopyToClipboard } from 'usehooks-ts'
@@ -12,11 +12,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useEditorStore } from '../store/useEditorStore'
+import Blackboard from 'monaco-themes/themes/Blackboard.json'
+import Cobalt from 'monaco-themes/themes/Cobalt.json'
+import Dracula from 'monaco-themes/themes/Dracula.json'
+import Tomorrow from 'monaco-themes/themes/Tomorrow.json'
 
 export function Code() {
   const [outputValue] = useApplicationStore((store) => [store.outputValue])
+  const [theme] = useEditorStore((store) => [store.theme])
   const [, copy] = useCopyToClipboard()
   const [isCopy, setIsCopy] = useState(false)
+  const [monaco, setMonaco] = useState<Monaco | null>(null)
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,6 +48,22 @@ export function Code() {
       .catch((error) => {
         console.error('Failed to copy!', error)
       })
+  }
+
+  useEffect(() => {
+    if (monaco) {
+      monaco.editor.setTheme(theme)
+    }
+  }, [theme, monaco])
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleEditorDidMount: OnMount = (_, monaco: any) => {
+    monaco.editor.defineTheme('Tomorrow', Tomorrow)
+    monaco.editor.defineTheme('Blackboard', Blackboard)
+    monaco.editor.defineTheme('Dracula', Dracula)
+    monaco.editor.defineTheme('Cobalt', Cobalt)
+
+    setMonaco(monaco)
   }
 
   const outputFormat = beautifyHtml(outputValue, {
@@ -77,6 +100,8 @@ export function Code() {
               <EditorMonaco
                 height={'400px'}
                 width={'100%'}
+                theme={theme}
+                onMount={handleEditorDidMount}
                 defaultLanguage={'html'}
                 language={'html'}
                 value={outputFormat}

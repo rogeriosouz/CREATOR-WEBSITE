@@ -81,7 +81,7 @@ export function UpdateProject({ projectId, nameProject }: UpdateProjectProps) {
           type="button"
           variant={'outline'}
           size={'sm'}
-          className="absolute hover:bg-secondary border hover:border-primary transition-all top-2 right-2"
+          className="absolute hover:bg-secondary border hover:border-primary transition-all top-4 right-2"
         >
           <Pencil className="size-5" weight="fill" />
         </Button>
