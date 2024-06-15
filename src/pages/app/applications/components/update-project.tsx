@@ -77,13 +77,9 @@ export function UpdateProject({ projectId, nameProject }: UpdateProjectProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          type="button"
-          variant={'outline'}
-          size={'sm'}
-          className="absolute hover:bg-secondary border hover:border-primary transition-all top-4 right-2"
-        >
+        <Button type="button" variant={'ghost'} size={'sm'} className="gap-2">
           <Pencil className="size-5" weight="fill" />
+          Editar projeto
         </Button>
       </DialogTrigger>
 
