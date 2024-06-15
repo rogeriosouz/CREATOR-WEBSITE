@@ -19,7 +19,7 @@ import Dracula from 'monaco-themes/themes/Dracula.json'
 import Tomorrow from 'monaco-themes/themes/Tomorrow.json'
 
 export function Code() {
-  const [outputValue] = useApplicationStore((store) => [store.outputValue])
+  const [codeValue] = useApplicationStore((store) => [store.codeValue])
   const [theme] = useEditorStore((store) => [store.theme])
   const [, copy] = useCopyToClipboard()
   const [isCopy, setIsCopy] = useState(false)
@@ -66,7 +66,7 @@ export function Code() {
     setMonaco(monaco)
   }
 
-  const outputFormat = beautifyHtml(outputValue, {
+  const outputFormat = beautifyHtml(codeValue, {
     indent_size: 2,
     indent_body_inner_html: true,
   })

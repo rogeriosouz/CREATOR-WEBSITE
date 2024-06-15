@@ -115,7 +115,7 @@ export function Register() {
         className="w-[450px] md:px-7 md:w-full bg-white rounded-md p-10 box-shadow-card"
       >
         <div className="w-full flex flex-col items-center justify-center">
-          <UserCircle className="size-10" weight="fill" />
+          <UserCircle className="size-10 dark:text-black" weight="fill" />
 
           <h1 className="text-lg dark:text-black font-medium text-center mb-5">
             Faça o registro abaixo

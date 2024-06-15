@@ -1,17 +1,15 @@
-import { useEffect } from 'react'
-import { useApplicationStore } from '../id/store/useApplicationStore'
 import { useQuery } from '@tanstack/react-query'
-import { ApplicationErrorResponse, ApplicationResponse } from '../id'
 import { useParams } from 'react-router-dom'
 import { api } from '@/lib/api'
 import { Helmet } from 'react-helmet-async'
+import {
+  ApplicationErrorResponse,
+  ApplicationResponse,
+} from '../id/components/browser'
+import { generateOutputBrowser } from '../id/store/useApplicationStore'
 
 export function Browser() {
   const { id } = useParams()
-  const [outputValue, setNewOutputValue] = useApplicationStore((store) => [
-    store.outputValue,
-    store.setNewOutputValue,
-  ])
 
   const { data, status } = useQuery<
     ApplicationResponse,
@@ -24,16 +22,6 @@ export function Browser() {
       return data
     },
   })
-
-  useEffect(() => {
-    if (status === 'success' && data) {
-      setNewOutputValue({
-        html: data.project.html ? data.project.html : '',
-        css: data.project.css ? data.project.css : '',
-        javascript: data.project.javascript ? data.project.javascript : '',
-      })
-    }
-  }, [data, setNewOutputValue, status])
 
   return (
     <section className="w-full h-screen">
@@ -49,12 +37,21 @@ export function Browser() {
         </Helmet>
       )}
 
-      <iframe
-        title="output"
-        srcDoc={outputValue}
-        style={{ width: '100%', height: '100%' }}
-        sandbox="allow-scripts"
-      />
+      {status === 'success' && (
+        <iframe
+          title="output-browser"
+          srcDoc={generateOutputBrowser({
+            html: data.project.html.length >= 1 ? data.project.html : '',
+            css: data.project.css.length >= 1 ? data.project.css : '',
+            javascript:
+              data.project.javascript.length >= 1
+                ? data.project.javascript
+                : '',
+          })}
+          style={{ width: '100%', height: '100%' }}
+          sandbox="allow-scripts allow-same-origin allow-top-navigation"
+        />
+      )}
     </section>
   )
 }

@@ -96,7 +96,7 @@ export function Login() {
         className="w-[450px] bg-white rounded-md md:px-7 p-10 box-shadow-card md:w-full"
       >
         <div className="w-full flex flex-col items-center justify-center">
-          <UserCircle className="size-10" weight="fill" />
+          <UserCircle className="size-10 dark:text-black" weight="fill" />
 
           <h1 className="text-lg dark:text-black font-medium text-center mb-5">
             Faça o login abaixo

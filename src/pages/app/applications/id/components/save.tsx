@@ -1,6 +1,9 @@
 import { api } from '@/lib/api'
 import { useMutation } from '@tanstack/react-query'
-import { useApplicationStore } from '../store/useApplicationStore'
+import {
+  generateOutputView,
+  useApplicationStore,
+} from '../store/useApplicationStore'
 import { CircleNotch, Play } from '@phosphor-icons/react'
 import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -12,17 +15,26 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { queryClient } from '@/lib/querryClient'
+import { ApplicationResponse } from './browser'
 
 export function Save() {
   const { id } = useParams()
-  const [html, css, javascript, setNewOutputValue, outputLanguagesValue] =
-    useApplicationStore((store) => [
-      store.html,
-      store.css,
-      store.javascript,
-      store.setNewOutputValue,
-      store.outputLanguagesValue,
-    ])
+  const [
+    html,
+    css,
+    javascript,
+    setOutputLanguagesValue,
+    outputLanguagesValue,
+    setCodeValue,
+  ] = useApplicationStore((store) => [
+    store.html,
+    store.css,
+    store.javascript,
+    store.setOutputLanguagesValue,
+    store.outputLanguagesValue,
+    store.setCodeValue,
+  ])
 
   const saveMutation = useMutation<
     { message: string; statusCode: string },
@@ -39,7 +51,25 @@ export function Save() {
       return data
     },
     onSuccess: (_, { html, css, javascript }) => {
-      setNewOutputValue({ html, css, javascript })
+      setOutputLanguagesValue({ html, css, javascript })
+
+      const queryKey = ['/application', id]
+      const data = queryClient.getQueryData<ApplicationResponse>(queryKey)
+
+      const newData = {
+        statusCode: data?.statusCode,
+        project: {
+          id: data?.project.id,
+          name: data?.project.name,
+          html,
+          css,
+          javascript,
+        },
+      }
+
+      queryClient.setQueryData(queryKey, newData)
+
+      setCodeValue(generateOutputView({ html, css, javascript }))
     },
   })
 
