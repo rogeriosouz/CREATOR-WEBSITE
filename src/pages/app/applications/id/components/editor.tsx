@@ -68,7 +68,7 @@ export function Editor() {
 
   return (
     <EditorMonaco
-      height={'94%'}
+      height={'100%'}
       width={'100%'}
       defaultLanguage={'html'}
       theme={theme}

@@ -45,7 +45,7 @@ export function Application() {
             </div>
           </div>
 
-          <div className="w-full h-full">
+          <div className="w-full h-[88vh]">
             <Editor />
           </div>
         </ResizablePanel>

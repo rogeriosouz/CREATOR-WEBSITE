@@ -36,7 +36,7 @@ export function Header() {
   }
 
   return (
-    <header className="w-full border-b py-2 flex items-center justify-between px-32 md:px-10">
+    <header className="w-full sticky top-0 left-0 right-0 bg-white dark:bg-background z-[1] border-b h-[7vh] flex items-center justify-between px-32 md:px-10">
       <div className="flex items-center w-full gap-10">
         <MenuMobile />
 
