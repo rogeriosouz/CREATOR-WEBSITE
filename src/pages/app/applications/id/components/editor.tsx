@@ -93,6 +93,9 @@ export function Editor() {
       defaultValue={html}
       options={{
         fontSize: fontSizeEditor,
+        minimap: {
+          enabled: false,
+        },
       }}
     />
   )
