@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
@@ -8,43 +8,48 @@ import {
   UserCircle,
   WarningCircle,
 } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { useMutation } from '@tanstack/react-query'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { z } from 'zod'
-import { api } from '@/lib/api'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Helmet } from 'react-helmet-async'
+import { useMutation } from '@tanstack/react-query'
+import { api } from '@/lib/api'
 import { ReturnToHome } from '../components/return-to-home'
 import { ThemeButton } from '../components/theme-button'
 
-const schemaRegister = z.object({
-  name: z.string().min(5),
-  email: z.string().email(),
-  password: z.string().min(5),
-})
+const recoveryPasswordSchema = z
+  .object({
+    newPassword: z.string().min(5),
+    confirmNewPassword: z.string().min(5),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: 'As senhas não coincidem',
+    path: ['confirmNewPassword'],
+  })
 
-type SchemaRegister = z.infer<typeof schemaRegister>
+type RecoveryPassword = z.infer<typeof recoveryPasswordSchema>
 
-export function Register() {
+export function RecoveryPassword() {
+  const { token } = useParams()
   const push = useNavigate()
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SchemaRegister>({
-    resolver: zodResolver(schemaRegister),
+  } = useForm<RecoveryPassword>({
+    resolver: zodResolver(recoveryPasswordSchema),
   })
 
-  const registerMutation = useMutation<
+  const recoveryPasswordMutation = useMutation<
     { message: string; statusCode: string },
     { response: { data: { statusCode: number; message: string } } },
-    { name: string; email: string; password: string }
+    { token: string; newPassword: string }
   >({
-    mutationFn: async ({ name, email, password }) => {
-      const { data } = await api.post('/auth/register', {
-        name,
-        email,
-        password,
+    mutationFn: async ({ token, newPassword }) => {
+      const { data } = await api.post('/auth/recovery-password', {
+        token,
+        newPassword,
       })
 
       return data
@@ -56,16 +61,19 @@ export function Register() {
     },
   })
 
-  function registerSubmit(data: SchemaRegister) {
-    registerMutation.mutate(data)
+  function recoveryPassword(data: RecoveryPassword) {
+    recoveryPasswordMutation.mutate({
+      token: token as string,
+      newPassword: data.newPassword,
+    })
   }
 
-  const { status, error, data } = registerMutation
+  const { status, error, data } = recoveryPasswordMutation
 
   return (
-    <div className="w-screen min-h-screen md:px-5 flex flex-col items-center justify-center">
+    <div className="w-screen md:px-5 min-h-screen flex-col flex items-center justify-center">
       <Helmet>
-        <title>register</title>
+        <title>recovery password</title>
       </Helmet>
 
       {status === 'error' && (
@@ -75,7 +83,7 @@ export function Register() {
         </Alert>
       )}
 
-      {status === 'success' && (
+      {status === 'success' && data && (
         <Alert variant={'success'} className="mb-5">
           <Check className="h-4 w-4" />
           <AlertDescription>{data.message}</AlertDescription>
@@ -89,47 +97,36 @@ export function Register() {
       </div>
 
       <form
-        onSubmit={handleSubmit(registerSubmit)}
-        className="w-[450px] md:px-7 md:w-full bg-white rounded-md p-10 box-shadow-card"
+        onSubmit={handleSubmit(recoveryPassword)}
+        className="w-[450px] bg-white rounded-md md:px-7 p-10 box-shadow-card md:w-full"
       >
         <div className="w-full flex flex-col items-center justify-center">
           <UserCircle className="size-10 dark:text-black" weight="fill" />
 
           <h1 className="text-lg dark:text-black font-medium text-center mb-5">
-            Faça o registro abaixo
+            Redefina sua senha abaixo.
           </h1>
         </div>
 
         <label className="block space-y-1 mb-2">
-          <p className="font-normal dark:text-black ">nome</p>
+          <p className="font-normal dark:text-black">nova senha</p>
           <Input
             type="text"
-            {...register('name')}
-            isError={!!errors.name}
-            messageError={errors.name?.message}
-            placeholder="name"
-          />
-        </label>
-
-        <label className="block space-y-1 mb-2">
-          <p className="font-normal dark:text-black ">e-mail</p>
-          <Input
-            type="text"
-            {...register('email')}
-            isError={!!errors.email}
-            messageError={errors.email?.message}
-            placeholder="email@domain.com"
+            {...register('newPassword')}
+            isError={!!errors.newPassword}
+            messageError={errors.newPassword?.message}
+            placeholder="nova senha"
           />
         </label>
 
         <label className="block space-y-1 mb-5">
-          <p className="font-normal dark:text-black ">password</p>
+          <p className="font-normal dark:text-black">repita a senha</p>
           <Input
             type="password"
-            {...register('password')}
-            isError={!!errors.password}
-            messageError={errors.password?.message}
-            placeholder="senha"
+            {...register('confirmNewPassword')}
+            isError={!!errors.confirmNewPassword}
+            messageError={errors.confirmNewPassword?.message}
+            placeholder="repita a senha"
           />
         </label>
 
@@ -141,19 +138,9 @@ export function Register() {
           {status === 'pending' ? (
             <CircleNotch className="animate-spin size-5" />
           ) : (
-            'Fazer registro'
+            'modificar senha'
           )}
         </Button>
-
-        <p className="text-sm dark:text-black text-center font-normal">
-          se já possui uma conta clique aqui{' '}
-          <Link
-            to={'/auth/login'}
-            className="hover:underline font-bold hover:opacity-90 transition-all"
-          >
-            fazer login
-          </Link>
-        </p>
       </form>
     </div>
   )

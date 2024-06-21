@@ -10,49 +10,57 @@ import {
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { useAuthStore } from '@/store/useAuthStore'
 import { Helmet } from 'react-helmet-async'
+import { useMutation } from '@tanstack/react-query'
+import { api } from '@/lib/api'
 import { ReturnToHome } from '../components/return-to-home'
-import { Link } from 'react-router-dom'
 import { ThemeButton } from '../components/theme-button'
 
-const schemaLogin = z.object({
+const forgotPasswordSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(5),
 })
 
-type SchemaLogin = z.infer<typeof schemaLogin>
+type ForgotPassword = z.infer<typeof forgotPasswordSchema>
 
-export function Login() {
+export function ForgotPassword() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SchemaLogin>({
-    resolver: zodResolver(schemaLogin),
+  } = useForm<ForgotPassword>({
+    resolver: zodResolver(forgotPasswordSchema),
   })
 
-  const [loginFn, status, error, data] = useAuthStore((store) => [
-    store.login,
-    store.status,
-    store.error,
-    store.data,
-  ])
+  const forgotPasswordMutation = useMutation<
+    { message: string; statusCode: string },
+    { response: { data: { statusCode: number; message: string } } },
+    { email: string }
+  >({
+    mutationFn: async ({ email }) => {
+      const { data } = await api.post('/auth/forgot-password', {
+        email,
+      })
 
-  function login(data: SchemaLogin) {
-    loginFn({ email: data.email, password: data.password })
+      return data
+    },
+  })
+
+  function forgotPassword(data: ForgotPassword) {
+    forgotPasswordMutation.mutate(data)
   }
+
+  const { status, error, data } = forgotPasswordMutation
 
   return (
     <div className="w-screen md:px-5 min-h-screen flex-col flex items-center justify-center">
       <Helmet>
-        <title>login</title>
+        <title>forgot password</title>
       </Helmet>
 
       {status === 'error' && (
         <Alert variant={'destructive'} className="mb-5">
           <WarningCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{error.response.data.message}</AlertDescription>
         </Alert>
       )}
 
@@ -70,46 +78,26 @@ export function Login() {
       </div>
 
       <form
-        onSubmit={handleSubmit(login)}
+        onSubmit={handleSubmit(forgotPassword)}
         className="w-[450px] bg-white rounded-md md:px-7 p-10 box-shadow-card md:w-full"
       >
         <div className="w-full flex flex-col items-center justify-center">
           <UserCircle className="size-10 dark:text-black" weight="fill" />
 
           <h1 className="text-lg dark:text-black font-medium text-center mb-5">
-            Faça o login abaixo
+            Recuperar senha.
           </h1>
         </div>
 
         <label className="block space-y-1 mb-2">
-          <p className="font-normal dark:text-black">e-mail</p>
+          <p className="font-normal dark:text-black">E-mail</p>
           <Input
             type="text"
             {...register('email')}
             isError={!!errors.email}
             messageError={errors.email?.message}
-            placeholder="email@domain.com"
+            placeholder="email@email.com"
           />
-        </label>
-
-        <label className="block space-y-1 mb-5">
-          <p className="font-normal dark:text-black">password</p>
-          <Input
-            type="password"
-            {...register('password')}
-            isError={!!errors.password}
-            messageError={errors.password?.message}
-            placeholder="senha"
-          />
-
-          <div className="w-full text-right">
-            <Link
-              className="text-sm dark:text-black font-normal hover:underline hover:opacity-90 transition-all"
-              to={'/auth/forgot-password'}
-            >
-              Esqueceu sua senha?
-            </Link>
-          </div>
         </label>
 
         <Button
@@ -120,19 +108,9 @@ export function Login() {
           {status === 'pending' ? (
             <CircleNotch className="animate-spin size-5" />
           ) : (
-            'Fazer login'
+            'recuperar senha'
           )}
         </Button>
-
-        <p className="text-sm text-center dark:text-black font-normal">
-          se não possui uma conta clique aqui{' '}
-          <Link
-            to={'/auth/register'}
-            className="hover:underline font-bold hover:opacity-90 transition-all"
-          >
-            registra-se
-          </Link>
-        </p>
       </form>
     </div>
   )

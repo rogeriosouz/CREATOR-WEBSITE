@@ -8,6 +8,8 @@ import { Applications } from './pages/app/applications'
 import { Application } from './pages/app/applications/id'
 import { Browser } from './pages/app/applications/browser'
 import ErrorPage from './error-page'
+import { RecoveryPassword } from './pages/auth/recovery-password'
+import { ForgotPassword } from './pages/auth/forgot-password'
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const push = useNavigate()
@@ -78,6 +80,22 @@ export const router = createBrowserRouter([
     element: (
       <AuthRouter>
         <Register />
+      </AuthRouter>
+    ),
+  },
+  {
+    path: '/auth/forgot-password',
+    element: (
+      <AuthRouter>
+        <ForgotPassword />
+      </AuthRouter>
+    ),
+  },
+  {
+    path: '/auth/recovery-password/:token',
+    element: (
+      <AuthRouter>
+        <RecoveryPassword />
       </AuthRouter>
     ),
   },
