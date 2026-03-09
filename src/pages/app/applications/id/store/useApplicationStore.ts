@@ -1,31 +1,32 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
-type Languages = 'html' | 'css' | 'javascript'
+type Languages = "html" | "css" | "javascript";
 
 export const generateOutputView = ({
   html,
   css,
   javascript,
 }: {
-  html: string
-  css: string
-  javascript: string
+  html: string;
+  css: string;
+  javascript: string;
 }) => {
   // Verifica se o HTML já contém as tags <html> e <head>
-  const hasHtmlTag = html.includes('<html')
-  const hasHeadTag = html.includes('<head')
-  const hasBodyTag = html.includes('<body')
+  const hasHtmlTag = html.includes("<html");
+  const hasHeadTag = html.includes("<head");
+  const hasBodyTag = html.includes("<body");
 
   if (hasHtmlTag && hasHeadTag && hasBodyTag) {
     // Insere o CSS e o JavaScript no documento HTML existente
     return html
-      .replace('</head>', `<style>${css}</style></head>`)
-      .replace('</body>', `<script>${javascript}</script></body>`)
+      .replace("</head>", `<style>${css}</style></head>`)
+      .replace("</body>", `<script>${javascript}</script></body>`);
   } else {
-    // Adiciona as tags <html>, <head> e <body> se não estiverem presentes
+    / Adiciona as tags <html>, <head> e <body> se não estiverem presentes/;
     return `
       <html>
       <head>
+        <script src="https://cdn.tailwindcss.com"></script>
         <style>${css}</style>
       </head>
       <body>
@@ -33,57 +34,58 @@ export const generateOutputView = ({
         <script>${javascript}</script>
       </body>
       </html>
-    `
+    `;
   }
-}
+};
 
 export const generateOutputBrowser = ({
   html,
   css,
   javascript,
 }: {
-  html: string
-  css: string
-  javascript: string
+  html: string;
+  css: string;
+  javascript: string;
 }) => {
-  const hasHtmlTag = html.includes('<html')
-  const hasHeadTag = html.includes('<head')
-  const hasBodyTag = html.includes('<body')
+  const hasHtmlTag = html.includes("<html");
+  const hasHeadTag = html.includes("<head");
+  const hasBodyTag = html.includes("<body");
 
-  let processedHtml = html
+  let processedHtml = html;
 
   const replaceLinks = (htmlContent: string) => {
-    const doc = new DOMParser().parseFromString(htmlContent, 'text/html')
-    const links = doc.querySelectorAll('a[href^="#"]')
+    const doc = new DOMParser().parseFromString(htmlContent, "text/html");
+    const links = doc.querySelectorAll('a[href^="#"]');
 
     links.forEach((link) => {
-      const target = link.getAttribute('href')?.substring(1)
-      link.removeAttribute('href')
-      link.setAttribute('onclick', `scrollToSection('${target}')`)
-    })
+      const target = link.getAttribute("href")?.substring(1);
+      link.removeAttribute("href");
+      link.setAttribute("onclick", `scrollToSection('${target}')`);
+    });
 
-    return doc.documentElement.innerHTML
-  }
+    return doc.documentElement.innerHTML;
+  };
 
   if (hasHtmlTag && hasHeadTag && hasBodyTag) {
     processedHtml = processedHtml.replace(
-      '</head>',
+      "</head>",
       `<style>${css}</style></head>`,
-    )
+    );
     processedHtml = processedHtml.replace(
-      '</body>',
+      "</body>",
       `<script>${javascript} function scrollToSection(sectionId) {
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
     }
   }</script></body>`,
-    )
+    );
   } else {
     processedHtml = `
       <html>
       <head>
         <style>${css}</style>
+        <script src="https://cdn.tailwindcss.com"></script>
       </head>
       <body>
         ${processedHtml}
@@ -95,46 +97,46 @@ export const generateOutputBrowser = ({
   }</script>
       </body>
       </html>
-    `
+    `;
   }
 
-  processedHtml = replaceLinks(processedHtml)
+  processedHtml = replaceLinks(processedHtml);
 
-  return processedHtml
-}
+  return processedHtml;
+};
 
 type OutputLanguagesValue = {
-  html: string
-  css: string
-  javascript: string
-}
+  html: string;
+  css: string;
+  javascript: string;
+};
 
 interface UseApplicationStoreProps {
-  html: string
-  setHtml: (html: string) => void
-  css: string
-  setCss: (html: string) => void
-  javascript: string
-  setJavascript: (html: string) => void
+  html: string;
+  setHtml: (html: string) => void;
+  css: string;
+  setCss: (html: string) => void;
+  javascript: string;
+  setJavascript: (html: string) => void;
 
-  outputLanguagesValue: OutputLanguagesValue
-  setOutputLanguagesValue: (outputValue: OutputLanguagesValue) => void
+  outputLanguagesValue: OutputLanguagesValue;
+  setOutputLanguagesValue: (outputValue: OutputLanguagesValue) => void;
 
-  languageSelect: string
-  setLanguageSelect: (language: Languages) => void
+  languageSelect: string;
+  setLanguageSelect: (language: Languages) => void;
 
-  codeValue: string
-  setCodeValue: (codeValue: string) => void
+  codeValue: string;
+  setCodeValue: (codeValue: string) => void;
 }
 
 export const useApplicationStore = create<UseApplicationStoreProps>((set) => ({
-  html: '',
-  css: '',
-  javascript: '',
-  languageSelect: 'html',
-  outputLanguagesValue: { html: '', css: '', javascript: '' },
+  html: "",
+  css: "",
+  javascript: "",
+  languageSelect: "html",
+  outputLanguagesValue: { html: "", css: "", javascript: "" },
   fontSizeEditor: 14,
-  codeValue: '',
+  codeValue: "",
 
   setHtml: (html) => set(() => ({ html })),
   setCss: (css) => set(() => ({ css })),
@@ -143,11 +145,11 @@ export const useApplicationStore = create<UseApplicationStoreProps>((set) => ({
   setOutputLanguagesValue: (outputValue) => {
     set(() => ({
       outputLanguagesValue: outputValue,
-    }))
+    }));
   },
   setCodeValue: (codeValue) => {
     set(() => ({
       codeValue,
-    }))
+    }));
   },
-}))
+}));

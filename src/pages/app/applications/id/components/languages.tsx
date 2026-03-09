@@ -1,8 +1,8 @@
-import { Html } from '@/components/icons/html'
-import { Css } from '@/components/icons/css'
-import { Javascript } from '@/components/icons/javascript'
-import clsx from 'clsx'
-import { useApplicationStore } from '../store/useApplicationStore'
+import { Html } from "@/components/icons/html";
+import { Css } from "@/components/icons/css";
+import { Javascript } from "@/components/icons/javascript";
+import clsx from "clsx";
+import { useApplicationStore } from "../store/useApplicationStore";
 
 export function Languages() {
   const [
@@ -19,16 +19,16 @@ export function Languages() {
     store.html,
     store.css,
     store.javascript,
-  ])
+  ]);
 
   return (
     <div className="w-full flex h-full">
       <button
-        onClick={() => setLanguageSelect('html')}
+        onClick={() => setLanguageSelect("html")}
         className={clsx(
-          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r',
+          "flex items-center font-medium hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r",
           {
-            'bg-secondary border-b-primary': languageSelect === 'html',
+            "bg-secondary border-b-primary": languageSelect === "html",
           },
         )}
       >
@@ -40,11 +40,11 @@ export function Languages() {
       </button>
 
       <button
-        onClick={() => setLanguageSelect('css')}
+        onClick={() => setLanguageSelect("css")}
         className={clsx(
-          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r',
+          "flex items-center font-medium hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r",
           {
-            'bg-secondary border-b-primary': languageSelect === 'css',
+            "bg-secondary border-b-primary": languageSelect === "css",
           },
         )}
       >
@@ -56,11 +56,11 @@ export function Languages() {
       </button>
 
       <button
-        onClick={() => setLanguageSelect('javascript')}
+        onClick={() => setLanguageSelect("javascript")}
         className={clsx(
-          'flex items-center hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r',
+          "flex items-center font-medium hover:bg-secondary border-b-2 transition-all hover:border-b-primary gap-2 h-full px-5 border-r",
           {
-            'bg-secondary border-b-primary': languageSelect === 'javascript',
+            "bg-secondary border-b-primary": languageSelect === "javascript",
           },
         )}
       >
@@ -71,5 +71,5 @@ export function Languages() {
         )}
       </button>
     </div>
-  )
+  );
 }

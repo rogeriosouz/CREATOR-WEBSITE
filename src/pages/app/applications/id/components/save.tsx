@@ -1,25 +1,25 @@
-import { api } from '@/lib/api'
-import { useMutation } from '@tanstack/react-query'
+import { api } from "@/lib/api";
+import { useMutation } from "@tanstack/react-query";
 import {
   generateOutputView,
   useApplicationStore,
-} from '../store/useApplicationStore'
-import { CircleNotch, Play } from '@phosphor-icons/react'
-import { useParams } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { useEventListener } from 'usehooks-ts'
+} from "../store/useApplicationStore";
+import { CircleNotch, Play } from "@phosphor-icons/react";
+import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useEventListener } from "usehooks-ts";
 
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { queryClient } from '@/lib/querryClient'
-import { ApplicationResponse } from './browser'
+} from "@/components/ui/tooltip";
+import { queryClient } from "@/lib/querryClient";
+import { ApplicationResponse } from "./browser";
 
 export function Save() {
-  const { id } = useParams()
+  const { id } = useParams();
   const [
     html,
     css,
@@ -34,7 +34,7 @@ export function Save() {
     store.setOutputLanguagesValue,
     store.outputLanguagesValue,
     store.setCodeValue,
-  ])
+  ]);
 
   const saveMutation = useMutation<
     { message: string; statusCode: string },
@@ -46,15 +46,15 @@ export function Save() {
         html,
         css,
         javascript,
-      })
+      });
 
-      return data
+      return data;
     },
     onSuccess: (_, { html, css, javascript }) => {
-      setOutputLanguagesValue({ html, css, javascript })
+      setOutputLanguagesValue({ html, css, javascript });
 
-      const queryKey = ['/application', id]
-      const data = queryClient.getQueryData<ApplicationResponse>(queryKey)
+      const queryKey = ["/application", id];
+      const data = queryClient.getQueryData<ApplicationResponse>(queryKey);
 
       const newData = {
         statusCode: data?.statusCode,
@@ -65,17 +65,17 @@ export function Save() {
           css,
           javascript,
         },
-      }
+      };
 
-      queryClient.setQueryData(queryKey, newData)
+      queryClient.setQueryData(queryKey, newData);
 
-      setCodeValue(generateOutputView({ html, css, javascript }))
+      setCodeValue(generateOutputView({ html, css, javascript }));
     },
-  })
+  });
 
   function save() {
     if (!html) {
-      return
+      return;
     }
 
     if (
@@ -83,32 +83,32 @@ export function Save() {
       outputLanguagesValue.css === css &&
       outputLanguagesValue.javascript === javascript
     ) {
-      return
+      return;
     }
 
     saveMutation.mutate({
       html,
-      css: css || '',
-      javascript: javascript || '',
+      css: css || "",
+      javascript: javascript || "",
       projectId: id as string,
-    })
+    });
   }
 
-  const { status } = saveMutation
+  const { status } = saveMutation;
 
   const isDisabled =
     (outputLanguagesValue.html === html &&
       outputLanguagesValue.css === css &&
       outputLanguagesValue.javascript === javascript) ||
-    status === 'pending'
+    status === "pending";
 
-  useEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.key === 's') {
-      event.preventDefault()
+  useEventListener("keydown", (event) => {
+    if (event.ctrlKey && event.key === "s") {
+      event.preventDefault();
 
-      save()
+      save();
     }
-  })
+  });
 
   return (
     <TooltipProvider>
@@ -117,10 +117,10 @@ export function Save() {
           <Button
             onClick={save}
             disabled={isDisabled}
-            variant={'outline'}
-            size={'sm'}
+            variant={"outline"}
+            size={"sm"}
           >
-            {status === 'pending' ? (
+            {status === "pending" ? (
               <CircleNotch className="size-5 animate-spin" />
             ) : (
               <Play className="size-5" weight="fill" />
@@ -132,5 +132,5 @@ export function Save() {
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
+  );
 }

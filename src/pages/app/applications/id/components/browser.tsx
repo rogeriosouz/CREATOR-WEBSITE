@@ -90,12 +90,9 @@ export function Browser() {
           title="browser"
           name="browser"
           srcDoc={generateOutputBrowser({
-            html: data.project.html.length >= 1 ? data.project.html : '',
-            css: data.project.css.length >= 1 ? data.project.css : '',
-            javascript:
-              data.project.javascript.length >= 1
-                ? data.project.javascript
-                : '',
+            html: data?.project.html ? data.project.html : '',
+            css: data.project.css ? data.project.css : '',
+            javascript: data.project.javascript ? data.project.javascript : '',
           })}
           style={{ width: '100%', height: '100%' }}
           sandbox="allow-scripts allow-same-origin allow-top-navigation"

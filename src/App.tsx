@@ -12,7 +12,7 @@ export function App() {
       <InicializeContextAuth>
         <Toaster richColors position="top-center" />
         <HelmetProvider>
-          <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <RouterProvider router={router} />
           </ThemeProvider>
         </HelmetProvider>

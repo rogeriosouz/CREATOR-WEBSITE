@@ -1,55 +1,56 @@
-import { api } from '@/lib/api'
-import { useQuery } from '@tanstack/react-query'
-import { CardProject } from './card-project'
-import { LoadingCardProject } from './loading-card-project'
+import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { CardProject } from "./card-project";
+import { LoadingCardProject } from "./loading-card-project";
 
 export type Project = {
-  id: string
-  name: string
-  updatedAt: Date
-}
+  id: string;
+  name: string;
+  description?: string;
+  updatedAt: Date;
+};
 
 interface ProjectsResponse {
-  statusCode: number
-  projects: Project[]
+  statusCode: number;
+  projects: Project[];
 }
 
 interface ProjectsErrorResponse {
-  statusCode: number
-  message: string
+  statusCode: number;
+  message: string;
 }
 
 export function ListProjects() {
   const { data, status } = useQuery<ProjectsResponse, ProjectsErrorResponse>({
-    queryKey: ['/projects'],
+    queryKey: ["/projects"],
     queryFn: async () => {
       const { data } = await api.get<{
-        statusCode: number
+        statusCode: number;
         projects: [
           {
-            id: string
-            name: string
-            updated_at: Date
+            id: string;
+            name: string;
+            updated_at: Date;
           },
-        ]
-      }>('/projects')
+        ];
+      }>("/projects");
 
       const newProjects = data.projects.map((project) => ({
         id: project.id,
         name: project.name,
         updatedAt: project.updated_at,
-      }))
+      }));
 
       return {
         statusCode: data.statusCode,
         projects: newProjects,
-      }
+      };
     },
-  })
+  });
 
   return (
-    <div className="grid grid-cols-5 gap-7 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-      {status === 'pending' && (
+    <div className="grid grid-cols-4 gap-7 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+      {status === "pending" && (
         <>
           <LoadingCardProject />
           <LoadingCardProject />
@@ -57,7 +58,7 @@ export function ListProjects() {
         </>
       )}
 
-      {status === 'success' && (
+      {status === "success" && (
         <>
           {data.projects.map((project) => (
             <CardProject key={project.id} project={project} />
@@ -65,11 +66,11 @@ export function ListProjects() {
         </>
       )}
 
-      {status === 'success' && data.projects.length <= 0 && (
+      {status === "success" && data.projects.length <= 0 && (
         <h3 className="font-medium text-muted">
           Parece que você não possui nenhum projeto.
         </h3>
       )}
     </div>
-  )
+  );
 }
